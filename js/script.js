@@ -2,6 +2,8 @@
 $('#name').focus();
 $('#other-title').hide();
 $('#shirt-colors').hide();
+$('#paypal').hide();
+$('#bitcoin').hide();
 
 
 /* Display and focus the other field for the job role section if the title is
@@ -72,6 +74,7 @@ function updateActivityCost(activity) {
   }
   return totalCost
 }
+
 // Disables an activity checkbox and changes text color to light gray
 function disableActivity(altActivity) {
   altActivity.attr('disabled', true);
@@ -83,6 +86,7 @@ function disableActivity(altActivity) {
    altActivity.attr('disabled', false);
    altActivity.parent().css('color', '#000000');
  }
+
 
 /* When an activity is checked a conflicting activity check box is disabled and
  * text color is changed to gray to indicat unavailabilty. When the box is
@@ -121,10 +125,30 @@ function disableActivity(altActivity) {
    }
  }
 
+
 // Event Listener for activity checkboxes
 $(':checkbox').on('click', function() {
   let activity = $(this);
   let cost = updateActivityCost(activity);
   $('#total-cost').text('Total: $' + totalCost);
   updateAvailableActivities(activity);
+});
+
+
+// Event Listener for payment selection menu
+$('#payment').change(function() {
+  let method = $(this).val();
+  if (method == 'paypal') {
+    $('#credit-card').hide();
+    $('#bitcoin').hide();
+    $('#paypal').show();
+  } else if (method == 'bitcoin') {
+    $('#credit-card').hide();
+    $('#paypal').hide();
+    $('#bitcoin').show();
+  } else {
+    $('#bitcoin').hide();
+    $('#paypal').hide();
+    $('#credit-card').show();
+  }
 });
