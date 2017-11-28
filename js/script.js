@@ -72,8 +72,17 @@ function updateActivityCost(activity) {
   }
   return totalCost
 }
+// Disables an activity checkbox and changes text color to light gray
+function disableActivity(altActivity) {
+  altActivity.attr('disabled', true);
+  altActivity.parent().css('color', '#6d6d6d');
+}
 
-
+// Enables an activity checkbox and changes text color to black
+ function enableActivity(altActivity) {
+   altActivity.attr('disabled', false);
+   altActivity.parent().css('color', '#000000');
+ }
 
 /* When an activity is checked a conflicting activity check box is disabled and
  * text color is changed to gray to indicat unavailabilty. When the box is
@@ -81,37 +90,33 @@ function updateActivityCost(activity) {
  */
  function updateAvailableActivities(activity) {
    if (activity.hasClass('tues-9-1')) {
+     let other = $('.tues-9-2');
      if (activity.is(':checked')) {
-       $('.tues-9-2').attr('disabled', true);
-       $('.tues-9-2').parent().css('color', '#6d6d6d')
+       disableActivity(other);
      } else {
-       $('.tues-9-2').attr('disabled', false);
-       $('.tues-9-2').parent().css('color', '#000000');
+       enableActivity(other);
      }
    }
    else if (activity.hasClass('tues-9-2')) {
+     let other = $('.tues-9-1')
      if (activity.is(':checked')) {
-       $('.tues-9-1').attr('disabled', true);
-       $('.tues-9-1').parent().css('color', '#6d6d6d')
+       disableActivity(other);
      } else {
-       $('.tues-9-1').attr('disabled', false);
-       $('.tues-9-1').parent().css('color', '#000000');
+       enableActivity(other);
      }
    } else if (activity.hasClass('tues-1-1')) {
+     let other = $('.tues-1-2');
      if (activity.is(':checked')) {
-       $('.tues-1-2').attr('disabled', true);
-       $('.tues-1-2').parent().css('color', '#6d6d6d')
+       disableActivity(other);
      } else {
-       $('.tues-1-2').attr('disabled', false);
-       $('.tues-1-2').parent().css('color', '#000000');
+       enableActivity(other);
      }
    } else if (activity.hasClass('tues-1-2')) {
+     let other = $('.tues-1-1');
      if (activity.is(':checked')) {
-       $('.tues-1-1').attr('disabled', true);
-       $('.tues-1-1').parent().css('color', '#6d6d6d')
+       disableActivity(other);
      } else {
-       $('.tues-1-1').attr('disabled', false);
-       $('.tues-1-1').parent().css('color', '#000000');
+       enableActivity(other);
      }
    }
  }
