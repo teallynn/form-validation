@@ -73,15 +73,45 @@ function updateActivityCost(activity) {
   return totalCost
 }
 
-/*
- *
+
+
+/* When an activity is checked a conflicting activity check box is disabled and
+ * text color is changed to gray to indicat unavailabilty. When the box is
+ * unchecked the changes are reversed.
  */
  function updateAvailableActivities(activity) {
    if (activity.hasClass('tues-9-1')) {
      if (activity.is(':checked')) {
        $('.tues-9-2').attr('disabled', true);
+       $('.tues-9-2').parent().css('color', '#6d6d6d')
      } else {
        $('.tues-9-2').attr('disabled', false);
+       $('.tues-9-2').parent().css('color', '#000000');
+     }
+   }
+   else if (activity.hasClass('tues-9-2')) {
+     if (activity.is(':checked')) {
+       $('.tues-9-1').attr('disabled', true);
+       $('.tues-9-1').parent().css('color', '#6d6d6d')
+     } else {
+       $('.tues-9-1').attr('disabled', false);
+       $('.tues-9-1').parent().css('color', '#000000');
+     }
+   } else if (activity.hasClass('tues-1-1')) {
+     if (activity.is(':checked')) {
+       $('.tues-1-2').attr('disabled', true);
+       $('.tues-1-2').parent().css('color', '#6d6d6d')
+     } else {
+       $('.tues-1-2').attr('disabled', false);
+       $('.tues-1-2').parent().css('color', '#000000');
+     }
+   } else if (activity.hasClass('tues-1-2')) {
+     if (activity.is(':checked')) {
+       $('.tues-1-1').attr('disabled', true);
+       $('.tues-1-1').parent().css('color', '#6d6d6d')
+     } else {
+       $('.tues-1-1').attr('disabled', false);
+       $('.tues-1-1').parent().css('color', '#000000');
      }
    }
  }
