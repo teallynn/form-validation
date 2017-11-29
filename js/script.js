@@ -184,7 +184,7 @@ function createEmailError() {
 
 function createActivityError() {
   let activityError = $('<span id="activity-error" style="color: red">Please choose at least 1 activity.</span>');
-  activityError.insertBefore($('#total-cost'));
+  activityError.insertAfter($('#activity-title'));
   activityError.hide();
 }
 
@@ -210,6 +210,9 @@ function createCVVError() {
 }
 
 function createErrorMessages() {
+  let generalError = $('<span id="gen-error" style="color: red">You have one or more errors in your form. Please correct them and resubmit.</span>');
+  generalError.insertBefore($('#register'));
+  generalError.hide();
   createNameError();
   createEmailError();
   createActivityError();
@@ -232,6 +235,7 @@ function validateName() {
     name.css('border', '2px solid red');
     $('#name-error').show();
   }
+  return match;
 }
 
 function validateEmail() {
@@ -245,22 +249,26 @@ function validateEmail() {
     email.css('border', '2px solid red');
     $('#email-error').show();
   }
+  return match;
 }
 
 function validateActivity() {
-  let activities = $(':checked');
+  let activities = $('input:checked');
+  let match = true;
   if (activities.length == 0) {
     $('#activity-error').show();
+    match = false;
   } else if (activities.length > 0) {
     $('#activity-error').hide();
+    match = true;
   }
+  return match;
 }
 
 function validateCardNumber() {
   let input = cardNumber.val();
-  let cardRegEx = /\d{13,16}/;
+  let cardRegEx = /^\d{13,16}$/;
   let match = cardRegEx.test(input);
-  console.log(match);
   if (match) {
     cardNumber.css('border', '2px solid #c1deeb');
     $('#card-error-blank').hide();
@@ -274,11 +282,12 @@ function validateCardNumber() {
     $('#card-error-short').show();
     $('#card-error-blank').hide();
   }
+  return match;
 }
 
 function validateZipCode() {
   let input = zipCode.val();
-  let zipRegEx = /\d{5}/;
+  let zipRegEx = /^\d{5}$/;
   let match = zipRegEx.test(input);
   if (match) {
     zipCode.css('border', '2px solid #c1deeb');
@@ -287,11 +296,12 @@ function validateZipCode() {
     zipCode.css('border', '2px solid red');
     $('#zip-error').show();
   }
+  return match;
 }
 
 function validateCVV() {
   let input = cvv.val();
-  let cvvRegEx = /\d{3}/;
+  let cvvRegEx = /^\d{3}$/;
   let match = cvvRegEx.test(input);
   if (match) {
     cvv.css('border', '2px solid #c1deeb');
@@ -300,6 +310,7 @@ function validateCVV() {
     cvv.css('border', '2px solid red');
     $('#cvv-error').show();
   }
+  return match;
 }
 
 // Event Listeners for form validation
@@ -307,19 +318,21 @@ function validateCVV() {
 let form = $('form');
 $('#register').on('click', function() {
   form.submit(function() {
-    event.preventDefault();
-    validateName();
-    validateEmail();
-    validateCardNumber();
-    validateZipCode();
-    validateCVV();
+    let valName = validateName();
+    let valEmail = validateEmail();
+    let valActivity = validateActivity();
+    let valCard = validateCardNumber();
+    let valZip = validateZipCode();
+    let valCVV = validateCVV();
+    if (!valName || !valEmail || !valActivity || !valCard || !valZip || !valCVV) {
+      event.preventDefault();
+      $('#gen-error').show();
+    } else {
+      $('#gen-error').hide();
+    }
   });
 });
 
 email.keyup(function() {
   validateEmail(email);
 });
-/*cardNumber.submit(validateCardNumber(cardNumber));
-zipCode.submit(validateZipCode(zipCode));
-cvv.submit(validateCVV(cvv));
-*/
