@@ -1,7 +1,9 @@
-/* Initial formatting:  -focus on name field,
+/******************************************************************
+ * Initial formatting:  -focus on name field,
  *                      -hide other job role text field,
  *                      -hide shirt color menu,
  *                      -hide alternate payment method information.
+ ******************************************************************
  */
 $('#name').focus();
 $('#other-title').hide();
@@ -10,8 +12,13 @@ $('#paypal').hide();
 $('#bitcoin').hide();
 
 
+/********************
+ * Job Role Section *
+ ********************
+ */
+
 /* Display and focus the other field for the job role section if the title is
- * 'other' hide the text field when title is not 'other'.
+ * 'other', hide the text field when title is not 'other'.
  */
  function showOtherJobRoleField(title) {
    if (title === 'other') {
@@ -30,32 +37,43 @@ $('#title').change( function(e) {
 });
 
 
-/* Display the color selection menu. Options are only those colors available
- * for the selected style.
+/*****************
+ * Shirt Section *
+ *****************
  */
- function showShirtColors(style) {
-   $('#shirt-colors').show();
-   if (style == 'js puns') {
-     $('#select-color').prop('selected', true);
-     $('.heart-js').hide();
-     $('.js-puns').show();
-   } else if (style == 'heart js') {
-     $('#select-color').prop('selected', true);
-     $('.js-puns').hide();
-     $('.heart-js').show();
-   } else if (style == 'Select Theme') {
-     $('#shirt-colors').hide();
-   }
 
+/* Display the color selection menu. Options are only those colors available
+ * for the selected style. When design selection is changed the "Select Color"
+ * option is automatically selected in the event listener so that a color choice
+ * from a previous design choice doesn't remain in the menu.
+ */
+function showShirtColors(style) {
+ $('#shirt-colors').show();
+ if (style == 'js puns') {
+   $('.heart-js').hide();
+   $('.js-puns').show();
+ } else if (style == 'heart js') {
+   $('.js-puns').hide();
+   $('.heart-js').show();
+ } else if (style == 'Select Theme') {
+   $('#shirt-colors').hide();
  }
-
+}
 
 // Event Listeneer for shirt style selection menu
 $('#design').change( function(e) {
   let style = $(this).val();
-  $('#blank-color').attr('selected');
+  $('#select-design').hide();
+  $('#select-color').show();
+  $('#select-color').prop('selected', true);
   showShirtColors(style);
 });
+
+
+/********************
+ * Activity Section *
+ ********************
+ */
 
 let totalCost = 0;
 
@@ -90,7 +108,6 @@ function disableActivity(altActivity) {
    altActivity.attr('disabled', false);
    altActivity.parent().css('color', '#000000');
  }
-
 
 /* When an activity is checked a conflicting activity check box is disabled and
  * text color is changed to gray to indicat unavailabilty. When the box is
@@ -139,6 +156,11 @@ $(':checkbox').on('click', function() {
 });
 
 
+/*******************
+ * Payment Section *
+ *******************
+ */
+
 // Event Listener for payment selection menu
 $('#payment').change(function() {
   let method = $(this).val();
@@ -162,57 +184,61 @@ $('#payment').change(function() {
  * Form validation *
  *******************
  */
-const name = $('#name');
-const email = $('#mail');
-const cardNumber = $('#cc-num');
-const zipCode = $('#zip');
-const cvv = $('#cvv');
+const $name = $('#name');
+const $email = $('#mail');
+const $cardNumber = $('#cc-num');
+const $zipCode = $('#zip');
+const $cvv = $('#cvv');
 
 
-// Error message functions.
+/* The following functions create (and append to the html document) error
+ * messages that correlate to each section and a general error message for the
+ * bottom of the page to alert the user that there may be an error message
+ * elsewhere on the page out of sight.
+ */
 function createNameError() {
-  let nameError = $('<span id="name-error" style="color: red">Please enter a name.</span>');
-  nameError.insertAfter(name);
-  nameError.hide();
+  let $nameError = $('<span id="name-error" style="color: red">Please enter a name.</span>');
+  $nameError.insertAfter($name);
+  $nameError.hide();
 }
 
 function createEmailError() {
-  let emailError = $('<span id="email-error" style="color: red">Please enter a valid email address.</span>');
-  emailError.insertAfter(email);
-  emailError.hide();
+  let $emailError = $('<span id="email-error" style="color: red">Please enter a valid email address.</span>');
+  $emailError.insertAfter($email);
+  $emailError.hide();
 }
 
 function createActivityError() {
-  let activityError = $('<span id="activity-error" style="color: red">Please choose at least 1 activity.</span>');
-  activityError.insertAfter($('#activity-title'));
-  activityError.hide();
+  let $activityError = $('<span id="activity-error" style="color: red">Please choose at least 1 activity.</span>');
+  $activityError.insertAfter($('#activity-title'));
+  $activityError.hide();
 }
 
 function createCardNumberError() {
-  let cardError1 = $('<span id="card-error-blank" style="color: red">Please enter a credit card number</span>');
-  let cardError2 = $('<span id="card-error-short" style="color: red">Please enter a number that is between 13 and 16 digits long.</span>');
-  cardError1.insertAfter(cardNumber);
-  cardError2.insertAfter(cardNumber);
-  cardError1.hide();
-  cardError2.hide();
+  let $cardError1 = $('<span id="card-error-blank" style="color: red">Please enter a credit card number</span>');
+  let $cardError2 = $('<span id="card-error-short" style="color: red">Please enter a number that is between 13 and 16 digits long.</span>');
+  $cardError1.insertAfter($cardNumber);
+  $cardError2.insertAfter($cardNumber);
+  $cardError1.hide();
+  $cardError2.hide();
 }
 
 function createZipError() {
-  let zipError = $('<span id="zip-error" style="color: red">Please enter a valid zip code.</span>');
-  zipError.insertAfter(zipCode);
-  zipError.hide();
+  let $zipError = $('<span id="zip-error" style="color: red">Please enter a valid zip code.</span>');
+  $zipError.insertAfter($zipCode);
+  $zipError.hide();
 }
 
 function createCVVError() {
-  let cvvError = $('<span id="cvv-error" style="color: red">Please enter a 3 digit cvv code.</span>');
-  cvvError.insertAfter(cvv);
-  cvvError.hide();
+  let $cvvError = $('<span id="cvv-error" style="color: red">Please enter a 3 digit cvv code.</span>');
+  $cvvError.insertAfter($cvv);
+  $cvvError.hide();
 }
 
 function createErrorMessages() {
-  let generalError = $('<span id="gen-error" style="color: red">You have one or more errors in your form. Please correct them and resubmit.</span>');
-  generalError.insertBefore($('#register'));
-  generalError.hide();
+  let $generalError = $('<span id="gen-error" style="color: red">You have one or more errors in your form. Please correct them and resubmit.</span>');
+  $generalError.insertBefore($('#register'));
+  $generalError.hide();
   createNameError();
   createEmailError();
   createActivityError();
@@ -223,42 +249,47 @@ function createErrorMessages() {
 
 createErrorMessages();
 
-// Validation Functions
+
+/* The following functions check the input from the user to validate that it
+ * fits the requirements for the type of information expected and returns a
+ * boolean value true if the input is acceptable and false if it is not (and
+ * requires an error message.)
+ */
 function validateName() {
-  let input = name.val();
+  let input = $name.val();
   let nameRegEx = /[a-z]+/i;
   let match = nameRegEx.test(input);
   if (match) {
-    name.css('border', '2px solid #c1deeb');
+    $name.css('border', '2px solid #c1deeb');
     $('#name-error').hide();
   } else {
-    name.css('border', '2px solid red');
+    $name.css('border', '2px solid red');
     $('#name-error').show();
   }
   return match;
 }
 
 function validateEmail() {
-  let input = email.val();
+  let input = $email.val();
   let emailRegEx = /[^@]+@[^@.]+\.[a-z]/i;
   let match = emailRegEx.test(input);
   if (match) {
-    email.css('border', '2px solid #c1deeb');
+    $email.css('border', '2px solid #c1deeb');
     $('#email-error').hide();
   } else {
-    email.css('border', '2px solid red');
+    $email.css('border', '2px solid red');
     $('#email-error').show();
   }
   return match;
 }
 
 function validateActivity() {
-  let activities = $('input:checked');
+  let $activities = $('input:checked');
   let match = true;
-  if (activities.length == 0) {
+  if ($activities.length == 0) {
     $('#activity-error').show();
     match = false;
-  } else if (activities.length > 0) {
+  } else if ($activities.length > 0) {
     $('#activity-error').hide();
     match = true;
   }
@@ -266,19 +297,19 @@ function validateActivity() {
 }
 
 function validateCardNumber() {
-  let input = cardNumber.val();
+  let input = $cardNumber.val();
   let cardRegEx = /^\d{13,16}$/;
   let match = cardRegEx.test(input);
   if (match) {
-    cardNumber.css('border', '2px solid #c1deeb');
+    $cardNumber.css('border', '2px solid #c1deeb');
     $('#card-error-blank').hide();
     $('#card-error-short').hide();
   } else if (!match && input == ''){
-    cardNumber.css('border', '2px solid red');
+    $cardNumber.css('border', '2px solid red');
     $('#card-error-blank').show();
     $('#card-error-short').hide();
   } else if (!match && input.length > 0) {
-    cardNumber.css('border', '2px solid red');
+    $cardNumber.css('border', '2px solid red');
     $('#card-error-short').show();
     $('#card-error-blank').hide();
   }
@@ -286,35 +317,38 @@ function validateCardNumber() {
 }
 
 function validateZipCode() {
-  let input = zipCode.val();
+  let input = $zipCode.val();
   let zipRegEx = /^\d{5}$/;
   let match = zipRegEx.test(input);
   if (match) {
-    zipCode.css('border', '2px solid #c1deeb');
+    $zipCode.css('border', '2px solid #c1deeb');
     $('#zip-error').hide();
   } else {
-    zipCode.css('border', '2px solid red');
+    $zipCode.css('border', '2px solid red');
     $('#zip-error').show();
   }
   return match;
 }
 
 function validateCVV() {
-  let input = cvv.val();
+  let input = $cvv.val();
   let cvvRegEx = /^\d{3}$/;
   let match = cvvRegEx.test(input);
   if (match) {
-    cvv.css('border', '2px solid #c1deeb');
+    $cvv.css('border', '2px solid #c1deeb');
     $('#cvv-error').hide();
   } else {
-    cvv.css('border', '2px solid red');
+    $cvv.css('border', '2px solid red');
     $('#cvv-error').show();
   }
   return match;
 }
 
-// Event Listeners for form validation
-
+/* Event Listener for form validation. Checks all form fields with validattion
+ * functions. If any return false it prevents page submission and error messages
+ * are displayed by those functions and the listener displays a general error.
+ * If all validation functions return true the form is submitted.
+ */
 let form = $('form');
 $('#register').on('click', function() {
   form.submit(function() {
@@ -333,6 +367,9 @@ $('#register').on('click', function() {
   });
 });
 
-email.keyup(function() {
-  validateEmail(email);
+/*Event Listener on email form field displays an error message as user is typing
+ * until the input matches the acceptable email format.
+ */
+$email.keyup(function() {
+  validateEmail();
 });
