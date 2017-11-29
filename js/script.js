@@ -1,4 +1,8 @@
-// Initial formatting: focus on name field, hide job role, hide shirt color menu.
+/* Initial formatting:  -focus on name field,
+ *                      -hide other job role text field,
+ *                      -hide shirt color menu,
+ *                      -hide alternate payment method information.
+ */
 $('#name').focus();
 $('#other-title').hide();
 $('#shirt-colors').hide();
@@ -152,3 +156,170 @@ $('#payment').change(function() {
     $('#credit-card').show();
   }
 });
+
+
+/*******************
+ * Form validation *
+ *******************
+ */
+const name = $('#name');
+const email = $('#mail');
+const cardNumber = $('#cc-num');
+const zipCode = $('#zip');
+const cvv = $('#cvv');
+
+
+// Error message functions.
+function createNameError() {
+  let nameError = $('<span id="name-error" style="color: red">Please enter a name.</span>');
+  nameError.insertAfter(name);
+  nameError.hide();
+}
+
+function createEmailError() {
+  let emailError = $('<span id="email-error" style="color: red">Please enter a valid email address.</span>');
+  emailError.insertAfter(email);
+  emailError.hide();
+}
+
+function createActivityError() {
+  let activityError = $('<span id="activity-error" style="color: red">Please choose at least 1 activity.</span>');
+  activityError.insertBefore($('#total-cost'));
+  activityError.hide();
+}
+
+function createCardNumberError() {
+  let cardError1 = $('<span id="card-error-blank" style="color: red">Please enter a credit card number</span>');
+  let cardError2 = $('<span id="card-error-short" style="color: red">Please enter a number that is between 13 and 16 digits long.</span>');
+  cardError1.insertAfter(cardNumber);
+  cardError2.insertAfter(cardNumber);
+  cardError1.hide();
+  cardError2.hide();
+}
+
+function createZipError() {
+  let zipError = $('<span id="zip-error" style="color: red">Please enter a valid zip code.</span>');
+  zipError.insertAfter(zipCode);
+  zipError.hide();
+}
+
+function createCVVError() {
+  let cvvError = $('<span id="cvv-error" style="color: red">Please enter a 3 digit cvv code.</span>');
+  cvvError.insertAfter(cvv);
+  cvvError.hide();
+}
+
+function createErrorMessages() {
+  createNameError();
+  createEmailError();
+  createActivityError();
+  createCardNumberError();
+  createZipError();
+  createCVVError();
+}
+
+createErrorMessages();
+
+// Validation Functions
+function validateName() {
+  let input = name.val();
+  let nameRegEx = /[a-z]+/i;
+  let match = nameRegEx.test(input);
+  if (match) {
+    name.css('border', '2px solid #c1deeb');
+    $('#name-error').hide();
+  } else {
+    name.css('border', '2px solid red');
+    $('#name-error').show();
+  }
+}
+
+function validateEmail() {
+  let input = email.val();
+  let emailRegEx = /[^@]+@[^@.]+\.[a-z]/i;
+  let match = emailRegEx.test(input);
+  if (match) {
+    email.css('border', '2px solid #c1deeb');
+    $('#email-error').hide();
+  } else {
+    email.css('border', '2px solid red');
+    $('#email-error').show();
+  }
+}
+
+function validateActivity() {
+  let activities = $(':checked');
+  if (activities.length == 0) {
+    $('#activity-error').show();
+  } else if (activities.length > 0) {
+    $('#activity-error').hide();
+  }
+}
+
+function validateCardNumber() {
+  let input = cardNumber.val();
+  let cardRegEx = /\d{13,16}/;
+  let match = cardRegEx.test(input);
+  console.log(match);
+  if (match) {
+    cardNumber.css('border', '2px solid #c1deeb');
+    $('#card-error-blank').hide();
+    $('#card-error-short').hide();
+  } else if (!match && input == ''){
+    cardNumber.css('border', '2px solid red');
+    $('#card-error-blank').show();
+    $('#card-error-short').hide();
+  } else if (!match && input.length > 0) {
+    cardNumber.css('border', '2px solid red');
+    $('#card-error-short').show();
+    $('#card-error-blank').hide();
+  }
+}
+
+function validateZipCode() {
+  let input = zipCode.val();
+  let zipRegEx = /\d{5}/;
+  let match = zipRegEx.test(input);
+  if (match) {
+    zipCode.css('border', '2px solid #c1deeb');
+    $('#zip-error').hide();
+  } else {
+    zipCode.css('border', '2px solid red');
+    $('#zip-error').show();
+  }
+}
+
+function validateCVV() {
+  let input = cvv.val();
+  let cvvRegEx = /\d{3}/;
+  let match = cvvRegEx.test(input);
+  if (match) {
+    cvv.css('border', '2px solid #c1deeb');
+    $('#cvv-error').hide();
+  } else {
+    cvv.css('border', '2px solid red');
+    $('#cvv-error').show();
+  }
+}
+
+// Event Listeners for form validation
+
+let form = $('form');
+$('#register').on('click', function() {
+  form.submit(function() {
+    event.preventDefault();
+    validateName();
+    validateEmail();
+    validateCardNumber();
+    validateZipCode();
+    validateCVV();
+  });
+});
+
+email.keyup(function() {
+  validateEmail(email);
+});
+/*cardNumber.submit(validateCardNumber(cardNumber));
+zipCode.submit(validateZipCode(zipCode));
+cvv.submit(validateCVV(cvv));
+*/
