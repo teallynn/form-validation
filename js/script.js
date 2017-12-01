@@ -355,10 +355,16 @@ $('#register').on('click', function() {
     let valName = validateName();
     let valEmail = validateEmail();
     let valActivity = validateActivity();
-    let valCard = validateCardNumber();
-    let valZip = validateZipCode();
-    let valCVV = validateCVV();
-    if (!valName || !valEmail || !valActivity || !valCard || !valZip || !valCVV) {
+    let valCredit = true;
+    if ($('#payment').val() == 'credit card' || $('#payment').val() == 'select_method') {
+      let valCard = validateCardNumber();
+      let valZip = validateZipCode();
+      let valCVV = validateCVV();
+      if (!valCard || !valZip || !valCVV) {
+        valCredit = false;
+      }
+    }
+    if (!valName || !valEmail || !valActivity || !valCredit) {
       event.preventDefault();
       $('#gen-error').show();
     } else {
@@ -373,3 +379,5 @@ $('#register').on('click', function() {
 $email.keyup(function() {
   validateEmail();
 });
+
+console.log($('#payment').val())
