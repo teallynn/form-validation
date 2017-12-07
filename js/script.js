@@ -6,11 +6,16 @@
  ******************************************************************
  */
 $('#name').focus();
-$('#other-title').hide();
-$('#colors-js-puns').hide();
+let $otherJobDiv = $('#other-title')
+$otherJobDiv.hide();
+let $shirtCOlorDiv = $('#colors-js-puns');
+$shirtCOlorDiv.hide();
 $('#color option:nth-child(1)').hide();
-$('#paypal').hide();
-$('#bitcoin').hide();
+let $creditCardDiv = $('#credit-card');
+let $paypalDiv = $('div p:contains(PayPal)');
+$paypalDiv.hide();
+let $bitcoinDiv = $('div p:contains(Bitcoin)');
+$bitcoinDiv.hide();
 
 
 /********************
@@ -23,10 +28,10 @@ $('#bitcoin').hide();
  */
  function showOtherJobRoleField(title) {
    if (title === 'other') {
-     $('#other-title').show();
-     $('#other-title').focus();
+     $otherJobDiv.show();
+     $otherJobDiv.focus();
    } else {
-     $('#other-title').hide();
+     $otherJobDiv.hide();
    }
  }
 
@@ -73,10 +78,6 @@ function showShirtColors(style) {
 // Event Listeneer for shirt style selection menu
 $('#design').change( function(e) {
   let style = $(this).val();
-  //$('#select-design').hide();
-  //$('#select-color').show();
-  //$('#select-color').prop('selected', true);
-
   showShirtColors(style);
 });
 
@@ -88,7 +89,7 @@ $('#design').change( function(e) {
 
 let totalCost = 0;
 
-/* Updates the totalCOst variable when an activity checkbox is checked or
+/* Updates the totalCost variable when an activity checkbox is checked or
  * unchecked.
  */
 function updateActivityCost(activity) {
@@ -122,7 +123,7 @@ function disableActivity(altActivity) {
  }
 
 /* When an activity is checked a conflicting activity check box is disabled and
- * text color is changed to gray to indicat unavailabilty. When the box is
+ * text color is changed to gray to indicate unavailabilty. When the box is
  * unchecked the changes are reversed.
  */
  function updateAvailableActivities(activity) {
@@ -176,17 +177,17 @@ $(':checkbox').on('click', function() {
 $('#payment').change(function() {
   let method = $(this).val();
   if (method == 'paypal') {
-    $('#credit-card').hide();
-    $('#bitcoin').hide();
-    $('#paypal').show();
+    $creditCardDiv.hide();
+    $bitcoinDiv.hide();
+    $paypalDiv.show();
   } else if (method == 'bitcoin') {
-    $('#credit-card').hide();
-    $('#paypal').hide();
-    $('#bitcoin').show();
+    $creditCardDiv.hide();
+    $paypalDiv.hide();
+    $bitcoinDiv.show();
   } else {
-    $('#bitcoin').hide();
-    $('#paypal').hide();
-    $('#credit-card').show();
+    $bitcoinDiv.hide();
+    $paypalDiv.hide();
+    $creditCardDiv.show();
   }
 });
 
