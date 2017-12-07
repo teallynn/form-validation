@@ -7,7 +7,8 @@
  */
 $('#name').focus();
 $('#other-title').hide();
-$('#shirt-colors').hide();
+$('#colors-js-puns').hide();
+$('#color option:nth-child(1)').hide();
 $('#paypal').hide();
 $('#bitcoin').hide();
 
@@ -43,29 +44,39 @@ $('#title').change( function(e) {
  */
 
 /* Display the color selection menu. Options are only those colors available
- * for the selected style. When design selection is changed the "Select Color"
- * option is automatically selected in the event listener so that a color choice
- * from a previous design choice doesn't remain in the menu.
+ * for the selected style. When design selection is changed the first color
+ * choice for that design is automatically selected.
  */
 function showShirtColors(style) {
- $('#shirt-colors').show();
- if (style == 'js puns') {
-   $('.heart-js').hide();
-   $('.js-puns').show();
- } else if (style == 'heart js') {
-   $('.js-puns').hide();
-   $('.heart-js').show();
+ $('#colors-js-puns').show();
+ if (style === 'js puns') {
+   $('#color option:nth-child(2)').show();
+   $('#color option:nth-child(3)').show();
+   $('#color option:nth-child(4)').show();
+   $('#color option:nth-child(5)').hide();
+   $('#color option:nth-child(6)').hide();
+   $('#color option:nth-child(7)').hide();
+   $('#color option:nth-child(2)').prop('selected', true);
+ } else if (style === 'heart js') {
+   $('#color option:nth-child(5)').show();
+   $('#color option:nth-child(6)').show();
+   $('#color option:nth-child(7)').show();
+   $('#color option:nth-child(2)').hide();
+   $('#color option:nth-child(3)').hide();
+   $('#color option:nth-child(4)').hide();
+   $('#color option:nth-child(5)').prop('selected', true);
  } else if (style == 'Select Theme') {
-   $('#shirt-colors').hide();
+   $('#colors-js-puns').hide();
  }
 }
 
 // Event Listeneer for shirt style selection menu
 $('#design').change( function(e) {
   let style = $(this).val();
-  $('#select-design').hide();
-  $('#select-color').show();
-  $('#select-color').prop('selected', true);
+  //$('#select-design').hide();
+  //$('#select-color').show();
+  //$('#select-color').prop('selected', true);
+
   showShirtColors(style);
 });
 
@@ -77,17 +88,18 @@ $('#design').change( function(e) {
 
 let totalCost = 0;
 
-/* Updates the totalCOst variable when an activity checkbix is checked or
+/* Updates the totalCOst variable when an activity checkbox is checked or
  * unchecked.
  */
 function updateActivityCost(activity) {
-  if (activity.hasClass('100')) {
+  $('.activities').append('<span id="total-cost"></span>')
+  if (activity.attr('name') != 'all') {
     if (activity.is(':checked')) {
       totalCost += 100;
     } else {
       totalCost -= 100;
     }
-  } else if (activity.hasClass('200')) {
+  } else if (activity.attr('name') === 'all') {
     if (activity.is(':checked')) {
       totalCost += 200;
     } else {
@@ -114,30 +126,29 @@ function disableActivity(altActivity) {
  * unchecked the changes are reversed.
  */
  function updateAvailableActivities(activity) {
-   if (activity.hasClass('tues-9-1')) {
-     let other = $('.tues-9-2');
+   if (activity.attr('name') === 'js-frameworks') {
+     let other = $('input[name="express"]');
      if (activity.is(':checked')) {
        disableActivity(other);
      } else {
        enableActivity(other);
      }
-   }
-   else if (activity.hasClass('tues-9-2')) {
-     let other = $('.tues-9-1')
+   } else if (activity.attr('name') === 'express') {
+     let other = $('input[name="js-frameworks"]');
      if (activity.is(':checked')) {
        disableActivity(other);
      } else {
        enableActivity(other);
      }
-   } else if (activity.hasClass('tues-1-1')) {
-     let other = $('.tues-1-2');
+   } else if (activity.attr('name') === 'js-libs') {
+     let other = $('input[name="node"]')
      if (activity.is(':checked')) {
        disableActivity(other);
      } else {
        enableActivity(other);
      }
-   } else if (activity.hasClass('tues-1-2')) {
-     let other = $('.tues-1-1');
+   } else if (activity.attr('name') === 'node') {
+     let other = $('input[name="js-libs"]');
      if (activity.is(':checked')) {
        disableActivity(other);
      } else {
@@ -209,8 +220,8 @@ function createEmailError() {
 }
 
 function createActivityError() {
-  let $activityError = $('<span id="activity-error" style="color: red">Please choose at least 1 activity.</span>');
-  $activityError.insertAfter($('#activity-title'));
+  let $activityError = $('<p id="activity-error" style="color: red">Please choose at least 1 activity:</p>');
+  $activityError.insertBefore($('input[name="all"]'));
   $activityError.hide();
 }
 
@@ -237,7 +248,7 @@ function createCVVError() {
 
 function createErrorMessages() {
   let $generalError = $('<span id="gen-error" style="color: red">You have one or more errors in your form. Please correct them and resubmit.</span>');
-  $generalError.insertBefore($('#register'));
+  $generalError.insertBefore($('button'));
   $generalError.hide();
   createNameError();
   createEmailError();
@@ -350,7 +361,7 @@ function validateCVV() {
  * If all validation functions return true the form is submitted.
  */
 let form = $('form');
-$('#register').on('click', function() {
+$('button').on('click', function() {
   form.submit(function() {
     let valName = validateName();
     let valEmail = validateEmail();
@@ -379,5 +390,3 @@ $('#register').on('click', function() {
 $email.keyup(function() {
   validateEmail();
 });
-
-console.log($('#payment').val())
